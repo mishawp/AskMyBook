@@ -1,0 +1,20 @@
+services:
+  nginx:
+    image: nginx:1.28.1-alpine3.23
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+    depends_on:
+      - fastapi
+    command: ["nginx", "-g", "daemon off;"]
+
+  fastapi:
+    build:
+      context: ./app
+      dockerfile: Dockerfile
+
+networks:
+  default:
+    driver: bridge
+
