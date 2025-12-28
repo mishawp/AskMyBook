@@ -13,7 +13,9 @@ services:
     build:
       context: ./app
       dockerfile: Dockerfile
-    command: ["uv", "run", "uvicorn", "api.main:app", "--host", "0.0.0.0", "--port", "8080"]
+    volumes:
+      - ./app:/app
+    command: ["uv", "run", "uvicorn", "--reload", "api.main:app", "--host", "0.0.0.0", "--port", "8080"]
     depends_on:
       postgres:
         condition: service_healthy
@@ -24,9 +26,9 @@ services:
       POSTGRES_USER: "${POSTGRES_USER:-postgres}"
       POSTGRES_PASSWORD: "${POSTGRES_PASSWORD:-postgres}"
       POSTGRES_DB: "${POSTGRES_DB:-askmybook}"
-      PGDATA: /var/lib/postgresql/data/pgdata
+      PGDATA: /var/lib/postgresql/18/docker
     volumes:
-      - postgres_data:/var/lib/postgresql/data:rw
+      - postgres_data:/var/lib/postgresql
     ports:
       - "5432:5432"
     restart: always
