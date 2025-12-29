@@ -1,3 +1,13 @@
+# Игнорировать всё
+*
+
+# Но не игнорировать сам .gitignore
+!.gitignore
+
+# Не игнорировать папку application и всё внутри неё
+!application/
+!application/**
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[codz]
