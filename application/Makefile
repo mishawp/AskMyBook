@@ -2,6 +2,5 @@
 
 # Выставить владельца папки app (uid=999 — такой же, как nonroot в Dockerfile)
 fix-perms:
-	sudo chown -R 999:$(shell id -g) ./app
-	sudo chmod -R g+rwX ./app
-
+	sudo setfacl -R -m u:$(shell id -u):rwX,u:999:rwX,g:$(shell id -g):rwX ./app
+	sudo setfacl -Rd -m u:$(shell id -u):rwX,u:999:rwX,g:$(shell id -g):rwX ./app
