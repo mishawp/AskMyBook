@@ -1,9 +1,14 @@
 [project]
-name = "src"
+name = "app"
 version = "0.1.0"
 description = "Add your description here"
 requires-python = ">=3.14.2"
 dependencies = [
+    "asyncpg>=0.31.0",
     "fastapi>=0.127.0",
+    "pydantic-settings>=2.12.0",
+    "pydantic[email]>=2.12.5",
+    "sqlalchemy[asyncio]>=2.0.45",
+    "sqlmodel>=0.0.31",
     "uvicorn>=0.40.0",
 ]
