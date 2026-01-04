@@ -1,4 +1,5 @@
-from sqlmodel import Field, SQLModel
+import uuid
+from sqlmodel import Field, SQLModel, text
 from pydantic import EmailStr
 
 
@@ -7,18 +8,26 @@ class UserBase(SQLModel):
 
 
 class User(UserBase, table=True):
-    id: int | None = Field(default=None, primary_key=True)
+    id: uuid.UUID | None = Field(
+        default=None,
+        primary_key=True,
+        sa_column_kwargs={"server_default": text("uuidv7()")},
+    )
     password: str  # TODO: password type?
 
 
-class UserCreate(UserBase):
+class UserCreateRequest(UserBase):
+    password: str  # TODO: password type?
+
+
+class UserCreateDB(UserBase):
     password: str  # TODO: password type?
 
 
 class UserPublic(UserBase):
-    id: int
+    id: uuid.UUID
 
 
 class UserUpdate(UserBase):
-    email: str | None
+    email: EmailStr | None
     password: str | None  # TODO: password type?

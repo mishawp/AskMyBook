@@ -1,8 +1,9 @@
 __all__ = (
     "User",
-    "UserCreate",
+    "UserCreateRequest",
+    "UserCreateDB",
     "UserPublic",
     "UserUpdate",
 )
 
-from .user import User, UserCreate, UserPublic, UserUpdate
+from .user import User, UserCreateRequest, UserCreateDB, UserPublic, UserUpdate

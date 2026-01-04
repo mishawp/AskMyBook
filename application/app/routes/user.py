@@ -1,6 +1,12 @@
 from fastapi import APIRouter, Depends
-from models import User, UserCreate, UserPublic, UserUpdate
-import services.user as crud
+from models import (
+    User,
+    UserCreateRequest,
+    UserCreateDB,
+    UserPublic,
+    UserUpdate,
+)
+from services import UserService
 from core.database import AsyncSessionDep, ScopedSessionDep
 
 router = APIRouter(tags=["User"])
@@ -8,9 +14,11 @@ router = APIRouter(tags=["User"])
 
 @router.get("/", response_model=list[UserPublic])
 async def get_users(session: AsyncSessionDep):
-    return await crud.get_users(session)
+    user_service = UserService(session)
+    return await user_service.get_all()
 
 
 @router.post("/", response_model=UserPublic)
-async def create_user(session: AsyncSessionDep, user: UserCreate):
-    return await crud.create_user(session, user)
+async def create_user(user: UserCreateRequest, session: AsyncSessionDep):
+    user_service = UserService(session)
+    return await user_service.create(user)
