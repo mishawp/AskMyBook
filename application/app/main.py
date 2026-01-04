@@ -1,6 +1,6 @@
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
-from routes import user_router
+from routes import user_router, chat_router
 from core.database import db_manager, init_db
 
 
@@ -8,11 +8,12 @@ from core.database import db_manager, init_db
 async def lifespan(app: FastAPI):
     await init_db()
     yield
-    db_manager.dispose()
+    await db_manager.dispose()
 
 
 app = FastAPI(lifespan=lifespan)
 app.include_router(user_router, prefix="/user")
+app.include_router(chat_router, prefix="/chat")
 
 
 @app.get("/")
