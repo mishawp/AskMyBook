@@ -15,6 +15,9 @@ services:
       dockerfile: Dockerfile
     volumes:
       - ./app:/app
+      # исключаем виртуальное окружение
+      - /app/__pycache__
+      - /app/.venv
     command: ["uv", "run", "uvicorn", "--reload", "main:app", "--host", "0.0.0.0", "--port", "8080"]
     depends_on:
       postgres:
@@ -45,4 +48,3 @@ volumes:
 networks:
   default:
     driver: bridge
-
