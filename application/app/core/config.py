@@ -18,6 +18,18 @@ class DBSettings(BaseSettings):
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
 
 
+class MinIOSettings(BaseSettings):
+    """Класс настроек подключения к MinIO."""
+
+    MINIO_ENDPOINT: str
+    MINIO_ROOT_USER: str
+    MINIO_ROOT_PASSWORD: str
+    MINIO_SECURE: bool = False
+    MINIO_BUCKET_NAME: str = "askmybook"
+
+    model_config = SettingsConfigDict(env_file=".env", extra="ignore")
+
+
 @lru_cache()
 def get_db_settings() -> DBSettings:
     """Фабрика настроек базы данных с кешированием.
@@ -25,3 +37,12 @@ def get_db_settings() -> DBSettings:
     Использует lru_cache, чтобы гарантировать создание
     единственного экземпляра DBSettings на всё приложение."""
     return DBSettings()
+
+
+@lru_cache()
+def get_minio_settings() -> MinIOSettings:
+    """Фабрика настроек MinIO с кешированием.
+
+    Использует lru_cache, чтобы гарантировать создание
+    единственного экземпляра MinIOSettings на всё приложение."""
+    return MinIOSettings()
