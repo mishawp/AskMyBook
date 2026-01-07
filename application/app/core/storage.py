@@ -1,6 +1,6 @@
 """Модуль для работы с MinIO хранилищем."""
 
-from typing import Annotated, AsyncGenerator
+from typing import Annotated
 from contextlib import asynccontextmanager
 import aioboto3
 from botocore.config import Config
@@ -75,6 +75,31 @@ class MinIOManager:
                 Bucket=self.settings.MINIO_BUCKET_NAME,
                 Key=object_name,
                 Body=file_data,
+                ContentType=content_type,
+            )
+        return object_name
+
+    async def upload_file_stream(
+        self,
+        file_stream,
+        object_name: str,
+        content_type: str = "application/octet-stream",
+    ) -> str:
+        """Загружает файл в MinIO потоково (для больших файлов).
+
+        Args:
+            file_stream: Асинхронный итератор байтов (например, UploadFile)
+            object_name: Имя объекта в MinIO
+            content_type: MIME тип файла
+
+        Returns:
+            Имя загруженного объекта
+        """
+        async with self.get_client() as client:
+            await client.put_object(
+                Bucket=self.settings.MINIO_BUCKET_NAME,
+                Key=object_name,
+                Body=file_stream,
                 ContentType=content_type,
             )
         return object_name

@@ -5,6 +5,7 @@ from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from chat import Chat
+    from document import Document
 
 
 class UserBase(SQLModel):
@@ -19,6 +20,7 @@ class User(UserBase, table=True):
     )
     password: str  # TODO: password type?
     chats: list["Chat"] = Relationship(back_populates="user")
+    documents: list["Document"] = Relationship(back_populates="user")
 
 
 class UserCreateRequest(UserBase):
