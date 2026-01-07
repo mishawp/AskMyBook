@@ -25,4 +25,4 @@ async def create_chat(
 ):
     chat_service = ChatService(session)
     chat_create_db = ChatCreateDB(**chat.model_dump(), user_id=user_id)
-    return await chat_service.create(chat)
+    return await chat_service.create(chat_create_db)
