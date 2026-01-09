@@ -15,9 +15,11 @@ __all__ = (
     "DocumentPublic",
     "DocumentUpdate",
     "ProcessingStatus",
+    "ChatDocument",
 )
 
 from .user import User, UserCreateRequest, UserCreateDB, UserPublic, UserUpdate
+from .chat_document import ChatDocument
 from .chat import Chat, ChatCreateRequest, ChatCreateDB, ChatPublic, ChatUpdate
 from .document import (
     Document,

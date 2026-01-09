@@ -1,5 +1,6 @@
 import uuid
 from sqlmodel import select
+from sqlalchemy.orm import selectinload
 from sqlalchemy.engine import Result
 from sqlalchemy.ext.asyncio import AsyncSession
 from models import (
@@ -9,12 +10,13 @@ from models import (
     DocumentPublic,
     DocumentUpdate,
     ProcessingStatus,
+    Chat,
 )
 from core.storage import MinIOManager
 
 
 class DocumentService:
-    def __init__(self, session: AsyncSession, minio: MinIOManager):
+    def __init__(self, session: AsyncSession, minio: MinIOManager | None = None):
         self.session = session
         self.minio = minio
 
@@ -86,3 +88,17 @@ class DocumentService:
             except Exception:
                 pass  # Ignore cleanup errors
             raise e
+
+    async def get_by_id(self, document_id: uuid.UUID) -> Document | None:
+        """Get document by ID with chats loaded."""
+        stmt = select(Document).where(Document.id == document_id).options(selectinload(Document.chats))
+        result = await self.session.execute(stmt)
+        return result.scalar_one_or_none()
+
+    async def get_chats(self, document_id: uuid.UUID) -> list[Chat] | None:
+        """Get all chats that use this document. Returns None if document not found."""
+        document = await self.get_by_id(document_id)
+        if not document:
+            return None
+
+        return document.chats

@@ -1,14 +1,14 @@
 import uuid
 from enum import Enum
-from sqlalchemy import UUID as sa_UUID
-from sqlalchemy.dialects.postgresql import JSONB
 from sqlmodel import Field, SQLModel, Relationship, func
 from fastapi import UploadFile
-from datetime import datetime, timezone
+from datetime import datetime
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from .user import User
+    from .chat import Chat
+    from .chat_document import ChatDocument
 
 
 class ProcessingStatus(str, Enum):
@@ -53,6 +53,12 @@ class Document(DocumentBase, table=True):
     is_deleted: bool = Field(default=False, index=True)
 
     user: "User" = Relationship(back_populates="documents")
+    chats: list["Chat"] = Relationship(
+        back_populates="documents",
+        sa_relationship_kwargs={
+            "secondary": "chatdocument"
+        }
+    )
 
 
 class DocumentCreateRequest(DocumentBase):
