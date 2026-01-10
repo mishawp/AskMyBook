@@ -1,4 +1,5 @@
 import uuid
+from sqlalchemy import UniqueConstraint
 from sqlmodel import Field, SQLModel, func
 
 
@@ -8,6 +9,10 @@ class ChatDocument(SQLModel, table=True):
     A chat can reference multiple documents for context, and a document
     can be used in multiple chats.
     """
+
+    __table_args__ = (
+        UniqueConstraint("chat_id", "document_id", name="uq_chat_document"),
+    )
 
     id: uuid.UUID | None = Field(
         default=None,
