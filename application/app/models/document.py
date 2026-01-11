@@ -7,6 +7,7 @@ from enum import Enum
 if TYPE_CHECKING:
     from .user import User
     from .chat import Chat
+    from .chunk import Chunk
 
 
 class ProcessingStatus(str, Enum):
@@ -51,3 +52,4 @@ class Document(SQLModel, table=True):
         back_populates="documents",
         sa_relationship_kwargs={"secondary": "chatdocument"},
     )
+    chunks: list["Chunk"] = Relationship(back_populates="document")

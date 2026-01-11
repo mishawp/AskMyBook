@@ -7,6 +7,7 @@ from typing import TYPE_CHECKING, Optional
 if TYPE_CHECKING:
     from .user import User
     from .document import Document
+    from .message import Message
 
 
 class Chat(SQLModel, table=True):
@@ -35,3 +36,4 @@ class Chat(SQLModel, table=True):
         back_populates="chats",
         sa_relationship_kwargs={"secondary": "chatdocument"},
     )
+    messages: list["Message"] = Relationship(back_populates="chat")
