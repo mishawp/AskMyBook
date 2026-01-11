@@ -11,6 +11,7 @@ __all__ = (
     "Chunk",
     "ChunkStatus",
     "MessageChunk",
+    "ChunkingConfig",
 )
 
 from .user import User
@@ -21,3 +22,4 @@ from .message import Message
 from .prompt_template import PromptTemplate, PromptTemplateStatus, PromptIntent
 from .chunk import Chunk, ChunkStatus
 from .message_chunk import MessageChunk
+from .chunking_config import ChunkingConfig

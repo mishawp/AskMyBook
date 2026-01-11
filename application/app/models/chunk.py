@@ -8,6 +8,7 @@ from enum import Enum
 if TYPE_CHECKING:
     from .document import Document
     from .message_chunk import MessageChunk
+    from .chunking_config import ChunkingConfig
 
 
 class ChunkStatus(str, Enum):
@@ -29,6 +30,10 @@ class Chunk(SQLModel, table=True):
 
     document_id: uuid.UUID = Field(
         foreign_key="document.id", ondelete="CASCADE", index=True
+    )
+
+    chunking_config_id: uuid.UUID = Field(
+        foreign_key="chunkingconfig.id", ondelete="RESTRICT", index=True
     )
 
     # Logical chunk identifier (stable across versions)
@@ -65,3 +70,4 @@ class Chunk(SQLModel, table=True):
     # Relationships
     document: "Document" = Relationship(back_populates="chunks")
     message_chunks: list["MessageChunk"] = Relationship(back_populates="chunk")
+    chunking_config: "ChunkingConfig" = Relationship(back_populates="chunks")
