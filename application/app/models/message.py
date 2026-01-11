@@ -2,10 +2,11 @@ import uuid
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlmodel import Field, SQLModel, Relationship, func
 from datetime import datetime
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Optional
 
 if TYPE_CHECKING:
     from .chat import Chat
+    from .message_chunk import MessageChunk
 
 
 class Message(SQLModel, table=True):
@@ -40,6 +41,12 @@ class Message(SQLModel, table=True):
     # For streaming: track if content is complete
     is_complete: bool = Field(default=False)
 
+    rag_config_id: uuid.UUID | None = Field(
+        default=None,
+        foreign_key="ragconfig.id",
+        ondelete="SET NULL",
+    )
+
     # Additional metadata (token counts, generation params, etc.)
     meta: dict = Field(default_factory=dict, sa_type=JSONB)
 
@@ -55,3 +62,6 @@ class Message(SQLModel, table=True):
 
     # Relationships
     chat: "Chat" = Relationship(back_populates="messages")
+    message_chunks: list["MessageChunk"] = Relationship(
+        back_populates="message"
+    )
