@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends
-from models import (
-    User,
+from models import User
+from schemas import (
     UserCreateRequest,
     UserCreateDB,
     UserPublic,

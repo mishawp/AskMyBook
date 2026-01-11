@@ -1,21 +1,15 @@
 import uuid
-from sqlalchemy import UUID as sa_UUID
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlmodel import Field, SQLModel, Relationship, func
 from datetime import datetime
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Optional
 
 if TYPE_CHECKING:
     from .user import User
     from .document import Document
-    from .chat_document import ChatDocument
 
 
-class ChatBase(SQLModel):
-    pass
-
-
-class Chat(ChatBase, table=True):
+class Chat(SQLModel, table=True):
     id: uuid.UUID | None = Field(
         default=None,
         primary_key=True,
@@ -36,29 +30,8 @@ class Chat(ChatBase, table=True):
         },
     )
 
-    user: "User" = Relationship(back_populates="chats")
+    user: Optional["User"] = Relationship(back_populates="chats")
     documents: list["Document"] = Relationship(
         back_populates="chats",
         sa_relationship_kwargs={"secondary": "chatdocument"},
     )
-
-
-class ChatCreateRequest(ChatBase):
-    pass
-
-
-class ChatCreateDB(ChatBase):
-    user_id: uuid.UUID
-    title: str = "New Chat"
-    meta: dict = Field(default_factory=dict)
-
-
-class ChatPublic(ChatBase):
-    id: uuid.UUID | None
-    created_at: datetime
-    updated_at: datetime
-    title: str
-
-
-class ChatUpdate(ChatBase):
-    title: str | None

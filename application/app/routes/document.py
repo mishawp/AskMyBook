@@ -4,8 +4,8 @@ from fastapi import (
     status,
     UploadFile,
 )
-from models import (
-    Document,
+from models import Document
+from schemas import (
     DocumentCreateRequest,
     DocumentCreateDB,
     DocumentPublic,

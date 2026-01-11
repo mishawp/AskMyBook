@@ -1,7 +1,7 @@
 import uuid
 from fastapi import APIRouter, HTTPException, status
-from models import (
-    Chat,
+from models import Chat
+from schemas import (
     ChatCreateRequest,
     ChatCreateDB,
     ChatPublic,

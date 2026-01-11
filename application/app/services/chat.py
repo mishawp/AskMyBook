@@ -1,13 +1,12 @@
 import uuid
 from sqlmodel import select
 from sqlalchemy.orm import selectinload
-from models import (
-    Chat,
+from models import Chat, Document
+from schemas import (
     ChatCreateRequest,
     ChatCreateDB,
     ChatPublic,
     ChatUpdate,
-    Document,
 )
 from sqlalchemy.engine import Result
 from sqlalchemy.ext.asyncio import AsyncSession

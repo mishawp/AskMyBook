@@ -3,14 +3,13 @@ from sqlmodel import select
 from sqlalchemy.orm import selectinload
 from sqlalchemy.engine import Result
 from sqlalchemy.ext.asyncio import AsyncSession
-from models import (
-    Document,
+from models import Document, Chat
+from schemas import (
     DocumentCreateRequest,
     DocumentCreateDB,
     DocumentPublic,
     DocumentUpdate,
     ProcessingStatus,
-    Chat,
 )
 from core.storage import MinIOManager
 
