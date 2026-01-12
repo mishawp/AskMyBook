@@ -7,6 +7,7 @@ from typing import TYPE_CHECKING, Optional
 if TYPE_CHECKING:
     from .chat import Chat
     from .message_chunk import MessageChunk
+    from .rag_config import RAGConfig
     from .prompt_template import PromptTemplate
 
 
@@ -42,6 +43,12 @@ class Message(SQLModel, table=True):
     # For streaming: track if content is complete
     is_complete: bool = Field(default=False)
 
+    rag_config_id: uuid.UUID | None = Field(
+        default=None,
+        foreign_key="ragconfig.id",
+        ondelete="RESTRICT",
+    )
+
     # Additional metadata (token counts, generation params, etc.)
     meta: dict = Field(default_factory=dict, sa_type=JSONB)
 
@@ -60,6 +67,7 @@ class Message(SQLModel, table=True):
     message_chunks: list["MessageChunk"] = Relationship(
         back_populates="message"
     )
+    rag_config: Optional["RAGConfig"] = Relationship(back_populates="messages")
     prompt_template: Optional["PromptTemplate"] = Relationship(
         sa_relationship_kwargs={"foreign_keys": "[Message.prompt_template_id]"}
     )

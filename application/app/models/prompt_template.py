@@ -2,10 +2,11 @@ import uuid
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlmodel import Field, SQLModel, Relationship, func
 from datetime import datetime
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Optional
 from enum import Enum
 
 if TYPE_CHECKING:
+    from .rag_config import RAGConfig
     from .message import Message
 
 
@@ -61,10 +62,16 @@ class PromptTemplate(SQLModel, table=True):
     )
 
     # Relationships
+    rag_config: Optional["RAGConfig"] = Relationship(
+        back_populates="prompt_template",
+        sa_relationship_kwargs={"uselist": False}
+    )
     messages_for_generation: list["Message"] = Relationship(
+        back_populates="prompt_template",
         sa_relationship_kwargs={"foreign_keys": "[Message.prompt_template_id]"}
     )
     messages_for_rewrite: list["Message"] = Relationship(
+        back_populates="rewrite_prompt_template",
         sa_relationship_kwargs={
             "foreign_keys": "[Message.rewrite_prompt_template_id]"
         }
