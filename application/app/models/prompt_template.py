@@ -5,6 +5,9 @@ from datetime import datetime
 from typing import TYPE_CHECKING
 from enum import Enum
 
+if TYPE_CHECKING:
+    from .message import Message
+
 
 class PromptTemplateStatus(str, Enum):
     """Status of prompt template"""
@@ -55,4 +58,14 @@ class PromptTemplate(SQLModel, table=True):
 
     created_at: datetime = Field(
         sa_column_kwargs={"server_default": func.now()}, index=True
+    )
+
+    # Relationships
+    messages_for_generation: list["Message"] = Relationship(
+        sa_relationship_kwargs={"foreign_keys": "[Message.prompt_template_id]"}
+    )
+    messages_for_rewrite: list["Message"] = Relationship(
+        sa_relationship_kwargs={
+            "foreign_keys": "[Message.rewrite_prompt_template_id]"
+        }
     )

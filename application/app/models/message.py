@@ -7,6 +7,7 @@ from typing import TYPE_CHECKING, Optional
 if TYPE_CHECKING:
     from .chat import Chat
     from .message_chunk import MessageChunk
+    from .prompt_template import PromptTemplate
 
 
 class Message(SQLModel, table=True):
@@ -21,17 +22,17 @@ class Message(SQLModel, table=True):
     )
 
     # Message content (can be updated for streaming)
-    system_message: str | None
     user_message: str
     rewrite_message: str | None
     ai_message: str | None
 
-    prompt_template: uuid.UUID | None = Field(
+    # FK to prompt templates
+    prompt_template_id: uuid.UUID | None = Field(
         foreign_key="prompttemplate.id", ondelete="RESTRICT"
     )
     # Переписывание запроса пользователя,
     # чтобы уловить контекст чата
-    rewrite_prompt_template: uuid.UUID = Field(
+    rewrite_prompt_template_id: uuid.UUID | None = Field(
         foreign_key="prompttemplate.id", ondelete="RESTRICT"
     )
 
@@ -40,12 +41,6 @@ class Message(SQLModel, table=True):
 
     # For streaming: track if content is complete
     is_complete: bool = Field(default=False)
-
-    rag_config_id: uuid.UUID | None = Field(
-        default=None,
-        foreign_key="ragconfig.id",
-        ondelete="SET NULL",
-    )
 
     # Additional metadata (token counts, generation params, etc.)
     meta: dict = Field(default_factory=dict, sa_type=JSONB)
@@ -64,4 +59,12 @@ class Message(SQLModel, table=True):
     chat: "Chat" = Relationship(back_populates="messages")
     message_chunks: list["MessageChunk"] = Relationship(
         back_populates="message"
+    )
+    prompt_template: Optional["PromptTemplate"] = Relationship(
+        sa_relationship_kwargs={"foreign_keys": "[Message.prompt_template_id]"}
+    )
+    rewrite_prompt_template: Optional["PromptTemplate"] = Relationship(
+        sa_relationship_kwargs={
+            "foreign_keys": "[Message.rewrite_prompt_template_id]"
+        }
     )
