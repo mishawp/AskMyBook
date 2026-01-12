@@ -50,6 +50,6 @@ class Document(SQLModel, table=True):
     user: Optional["User"] = Relationship(back_populates="documents")
     chats: list["Chat"] = Relationship(
         back_populates="documents",
-        sa_relationship_kwargs={"secondary": "chatdocument"},
+        sa_relationship_kwargs={"secondary": "chat_document"},
     )
     chunks: list["Chunk"] = Relationship(back_populates="document")

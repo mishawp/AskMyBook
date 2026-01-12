@@ -10,6 +10,8 @@ class ChatDocument(SQLModel, table=True):
     can be used in multiple chats.
     """
 
+    __tablename__ = "chat_document"
+
     __table_args__ = (
         UniqueConstraint("chat_id", "document_id", name="uq_chat_document"),
     )

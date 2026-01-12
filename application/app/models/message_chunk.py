@@ -14,6 +14,8 @@ class MessageChunk(SQLModel, table=True):
     DENORMALIZED: store chunk version for quick filtering.
     """
 
+    __tablename__ = "message_chunk"
+
     id: uuid.UUID | None = Field(
         default=None,
         primary_key=True,

@@ -32,6 +32,8 @@ class PromptTemplate(SQLModel, table=True):
     All metadata in JSONB for flexibility.
     """
 
+    __tablename__ = "prompt_template"
+
     id: uuid.UUID | None = Field(
         default=None,
         primary_key=True,
@@ -64,15 +66,17 @@ class PromptTemplate(SQLModel, table=True):
     # Relationships
     rag_config: Optional["RAGConfig"] = Relationship(
         back_populates="prompt_template",
-        sa_relationship_kwargs={"uselist": False}
+        sa_relationship_kwargs={"uselist": False},
     )
     messages_for_generation: list["Message"] = Relationship(
         back_populates="prompt_template",
-        sa_relationship_kwargs={"foreign_keys": "[Message.prompt_template_id]"}
+        sa_relationship_kwargs={
+            "foreign_keys": "[Message.prompt_template_id]"
+        },
     )
     messages_for_rewrite: list["Message"] = Relationship(
         back_populates="rewrite_prompt_template",
         sa_relationship_kwargs={
             "foreign_keys": "[Message.rewrite_prompt_template_id]"
-        }
+        },
     )

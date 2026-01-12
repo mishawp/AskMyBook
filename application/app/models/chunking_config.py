@@ -15,6 +15,8 @@ class ChunkingConfig(SQLModel, table=True):
     Examples: recursive_512_64, semantic_768_128, chapter_aware_v1
     """
 
+    __tablename__ = "chunking_config"
+
     id: uuid.UUID | None = Field(
         default=None,
         primary_key=True,

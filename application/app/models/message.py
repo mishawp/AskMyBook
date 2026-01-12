@@ -29,12 +29,12 @@ class Message(SQLModel, table=True):
 
     # FK to prompt templates
     prompt_template_id: uuid.UUID | None = Field(
-        foreign_key="prompttemplate.id", ondelete="RESTRICT"
+        foreign_key="prompt_template.id", ondelete="RESTRICT"
     )
     # Переписывание запроса пользователя,
     # чтобы уловить контекст чата
     rewrite_prompt_template_id: uuid.UUID | None = Field(
-        foreign_key="prompttemplate.id", ondelete="RESTRICT"
+        foreign_key="prompt_template.id", ondelete="RESTRICT"
     )
 
     # Sequence number within chat (for ordering)
@@ -45,7 +45,7 @@ class Message(SQLModel, table=True):
 
     rag_config_id: uuid.UUID | None = Field(
         default=None,
-        foreign_key="ragconfig.id",
+        foreign_key="rag_config.id",
         ondelete="RESTRICT",
     )
 

@@ -34,6 +34,6 @@ class Chat(SQLModel, table=True):
     user: Optional["User"] = Relationship(back_populates="chats")
     documents: list["Document"] = Relationship(
         back_populates="chats",
-        sa_relationship_kwargs={"secondary": "chatdocument"},
+        sa_relationship_kwargs={"secondary": "chat_document"},
     )
     messages: list["Message"] = Relationship(back_populates="chat")

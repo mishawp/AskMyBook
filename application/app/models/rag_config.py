@@ -21,6 +21,8 @@ class RAGConfigStatus(str, Enum):
 class RAGConfig(SQLModel, table=True):
     """Stores versioned RAG configurations."""
 
+    __tablename__ = "rag_config"
+
     id: uuid.UUID | None = Field(
         default=None,
         primary_key=True,
@@ -32,7 +34,7 @@ class RAGConfig(SQLModel, table=True):
 
     # FK to prompt template
     prompt_template_id: uuid.UUID = Field(
-        foreign_key="prompttemplate.id",
+        foreign_key="prompt_template.id",
         ondelete="RESTRICT",
     )
 
@@ -62,5 +64,7 @@ class RAGConfig(SQLModel, table=True):
     )
 
     # Relationships
-    prompt_template: "PromptTemplate" = Relationship(back_populates="rag_config")
+    prompt_template: "PromptTemplate" = Relationship(
+        back_populates="rag_config"
+    )
     messages: list["Message"] = Relationship(back_populates="rag_config")

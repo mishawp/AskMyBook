@@ -33,7 +33,7 @@ class Chunk(SQLModel, table=True):
     )
 
     chunking_config_id: uuid.UUID = Field(
-        foreign_key="chunkingconfig.id", ondelete="RESTRICT", index=True
+        foreign_key="chunking_config.id", ondelete="RESTRICT", index=True
     )
 
     # Logical chunk identifier (stable across versions)
