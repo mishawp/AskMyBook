@@ -10,6 +10,7 @@ from schemas import (
 )
 from services import ChatService
 from core.database import AsyncSessionDep, ScopedSessionDep
+from dependencies import CurrentUser
 
 router = APIRouter(tags=["Chat"])
 
@@ -34,10 +35,12 @@ async def get_chat(chat_id: uuid.UUID, session: AsyncSessionDep):
 
 @router.post("/", response_model=ChatPublic)
 async def create_chat(
-    chat: ChatCreateRequest, user_id: uuid.UUID, session: AsyncSessionDep
+    chat: ChatCreateRequest,
+    current_user: CurrentUser,
+    session: AsyncSessionDep,
 ):
     chat_service = ChatService(session)
-    chat_create_db = ChatCreateDB(**chat.model_dump(), user_id=user_id)
+    chat_create_db = ChatCreateDB(**chat.model_dump(), user_id=current_user.id)
     return await chat_service.create(chat_create_db)
 
 
