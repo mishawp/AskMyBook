@@ -1,12 +1,11 @@
 import uuid
-from sqlalchemy.dialects.postgresql import JSONB
 from sqlmodel import Field, SQLModel, Relationship, func
 from datetime import datetime
 from typing import TYPE_CHECKING
 from enum import Enum
 
 if TYPE_CHECKING:
-    from .document import Document
+    from .parsed_document import ParsedDocument
     from .message_chunk import MessageChunk
     from .chunking_config import ChunkingConfig
 
@@ -28,8 +27,8 @@ class Chunk(SQLModel, table=True):
         sa_column_kwargs={"server_default": func.uuidv7()},
     )
 
-    document_id: uuid.UUID = Field(
-        foreign_key="document.id", ondelete="CASCADE", index=True
+    parsed_document_id: uuid.UUID = Field(
+        foreign_key="parsed_document.id", ondelete="CASCADE", index=True
     )
 
     chunking_config_id: uuid.UUID = Field(
@@ -37,9 +36,9 @@ class Chunk(SQLModel, table=True):
     )
 
     # Logical chunk identifier (stable across versions)
-    # Combination of document_id + logical_chunk_id identifies same chunk across versions
+    # Combination of parsed_document_id + logical_chunk_id identifies same chunk across versions
     logical_chunk_id: str = Field(max_length=100, index=True)
-    # Example: "doc123_ch1_sec2_p5-7" (document + chapter + section + pages)
+    # Example: "ch1_sec2_p5-7" (chapter + section + pages)
 
     # Version tag for this chunk
     version_tag: str = Field(max_length=50, index=True)
@@ -49,7 +48,6 @@ class Chunk(SQLModel, table=True):
 
     # Positional metadata
     start_page: int | None = None
-
     end_page: int | None = None
     start_offset: int | None = None
     end_offset: int | None = None
@@ -68,6 +66,6 @@ class Chunk(SQLModel, table=True):
     )
 
     # Relationships
-    document: "Document" = Relationship(back_populates="chunks")
+    parsed_document: "ParsedDocument" = Relationship(back_populates="chunks")
     message_chunks: list["MessageChunk"] = Relationship(back_populates="chunk")
     chunking_config: "ChunkingConfig" = Relationship(back_populates="chunks")

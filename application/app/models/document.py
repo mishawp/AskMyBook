@@ -7,7 +7,7 @@ from enum import Enum
 if TYPE_CHECKING:
     from .user import User
     from .chat import Chat
-    from .chunk import Chunk
+    from .parsed_document import ParsedDocument
 
 
 class ProcessingStatus(str, Enum):
@@ -20,6 +20,8 @@ class ProcessingStatus(str, Enum):
 
 
 class Document(SQLModel, table=True):
+    """Stores uploaded document files (PDFs, etc.)."""
+
     id: uuid.UUID | None = Field(
         default=None,
         primary_key=True,
@@ -38,18 +40,18 @@ class Document(SQLModel, table=True):
         default=ProcessingStatus.PENDING
     )
 
-    # Additional metadata (extraction config, errors, etc.)
-    # meta: dict = Field(default_factory=dict, sa_type=JSONB)
-
     created_at: datetime = Field(
         sa_column_kwargs={"server_default": func.now()}
     )
     deleted_at: datetime | None = None
     is_deleted: bool = Field(default=False, index=True)
 
+    # Relationships
     user: Optional["User"] = Relationship(back_populates="documents")
     chats: list["Chat"] = Relationship(
         back_populates="documents",
         sa_relationship_kwargs={"secondary": "chat_document"},
     )
-    chunks: list["Chunk"] = Relationship(back_populates="document")
+    parsed_documents: list["ParsedDocument"] = Relationship(
+        back_populates="document"
+    )
