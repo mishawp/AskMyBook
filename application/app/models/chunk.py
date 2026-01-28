@@ -8,6 +8,7 @@ if TYPE_CHECKING:
     from .parsed_document import ParsedDocument
     from .message_chunk import MessageChunk
     from .chunking_config import ChunkingConfig
+    from .indexing_config import IndexingConfig
 
 
 class ChunkStatus(str, Enum):
@@ -33,6 +34,13 @@ class Chunk(SQLModel, table=True):
 
     chunking_config_id: uuid.UUID = Field(
         foreign_key="chunking_config.id", ondelete="RESTRICT", index=True
+    )
+
+    indexing_config_id: uuid.UUID | None = Field(
+        default=None,
+        foreign_key="indexing_config.id",
+        ondelete="RESTRICT",
+        index=True,
     )
 
     # Logical chunk identifier (stable across versions)
@@ -69,3 +77,4 @@ class Chunk(SQLModel, table=True):
     parsed_document: "ParsedDocument" = Relationship(back_populates="chunks")
     message_chunks: list["MessageChunk"] = Relationship(back_populates="chunk")
     chunking_config: "ChunkingConfig" = Relationship(back_populates="chunks")
+    indexing_config: "IndexingConfig" | None = Relationship(back_populates="chunks")

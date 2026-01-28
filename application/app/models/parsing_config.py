@@ -31,7 +31,7 @@ class ParsingConfig(SQLModel, table=True):
     version: str = Field(max_length=50)
 
     # Parser type (pymupdf, pdfplumber, marker, etc.)
-    parser: str = Field(max_length=100)
+    parser_type: str = Field(max_length=100)
 
     # Configuration parameters
     config: dict = Field(sa_type=JSONB)

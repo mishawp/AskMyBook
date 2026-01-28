@@ -15,6 +15,7 @@ __all__ = (
     "ChunkStatus",
     "MessageChunk",
     "ChunkingConfig",
+    "IndexingConfig",
     "RAGConfig",
     "RAGConfigStatus",
 )
@@ -30,4 +31,5 @@ from .parsed_document import ParsedDocument, ParsingStatus
 from .chunk import Chunk, ChunkStatus
 from .message_chunk import MessageChunk
 from .chunking_config import ChunkingConfig
+from .indexing_config import IndexingConfig
 from .rag_config import RAGConfig, RAGConfigStatus
