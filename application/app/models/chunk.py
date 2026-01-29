@@ -77,4 +77,4 @@ class Chunk(SQLModel, table=True):
     parsed_document: "ParsedDocument" = Relationship(back_populates="chunks")
     message_chunks: list["MessageChunk"] = Relationship(back_populates="chunk")
     chunking_config: "ChunkingConfig" = Relationship(back_populates="chunks")
-    indexing_config: "IndexingConfig" | None = Relationship(back_populates="chunks")
+    indexing_config: "IndexingConfig" = Relationship(back_populates="chunks")
