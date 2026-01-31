@@ -4,7 +4,7 @@ from fastapi.security import OAuth2PasswordBearer
 from models import User
 from security import decode_access_token, TokenData, get_auth_settings
 from services import UserService
-from core.database import ScopedSessionDep
+from core import ScopedSessionDep
 
 # OAuth2 схема для Swagger UI и API клиентов (auto_error=False для fallback на cookie)
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/login", auto_error=False)

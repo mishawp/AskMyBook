@@ -11,11 +11,13 @@ from schemas import (
     DocumentUpdate,
     ProcessingStatus,
 )
-from core.storage import MinIOManager
+from core import MinIOManager
 
 
 class DocumentService:
-    def __init__(self, session: AsyncSession, minio: MinIOManager | None = None):
+    def __init__(
+        self, session: AsyncSession, minio: MinIOManager | None = None
+    ):
         self.session = session
         self.minio = minio
 
@@ -90,7 +92,11 @@ class DocumentService:
 
     async def get_by_id(self, document_id: uuid.UUID) -> Document | None:
         """Get document by ID with chats loaded."""
-        stmt = select(Document).where(Document.id == document_id).options(selectinload(Document.chats))
+        stmt = (
+            select(Document)
+            .where(Document.id == document_id)
+            .options(selectinload(Document.chats))
+        )
         result = await self.session.execute(stmt)
         return result.scalar_one_or_none()
 

@@ -11,15 +11,17 @@ services:
 
   fastapi:
     build:
-      context: ./app
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: ./app/Dockerfile
     env_file:
       - .env
     volumes:
-      - ./app:/app
-      # исключаем виртуальное окружение
-      - /app/__pycache__
-      - /app/.venv
+      - ./shared:/application/shared
+      - ./app:/application/app
+      # исключаем виртуальное окружение и кэш из хоста
+      - /application/app/__pycache__
+      - /application/app/.venv
+    working_dir: /application/app
     command: ["uv", "run", "uvicorn", "--reload", "main:app", "--host", "0.0.0.0", "--port", "8080"]
     depends_on:
       postgres:

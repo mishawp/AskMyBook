@@ -8,7 +8,7 @@ from schemas import (
 )
 from security import Token, UserLogin, get_auth_settings
 from services import UserService
-from core.database import AsyncSessionDep
+from core import AsyncSessionDep
 from dependencies import CurrentUser
 
 router = APIRouter(tags=["Auth"])

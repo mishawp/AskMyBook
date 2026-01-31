@@ -1,8 +1,11 @@
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from routes import user_router, chat_router, document_router, auth_router
-from core.database import db_manager, init_db
-from core.storage import init_minio
+from core import (
+    db_manager,
+    init_db,
+    init_minio,
+)
 
 
 @asynccontextmanager

@@ -14,8 +14,7 @@ from schemas import (
     ChatPublic,
 )
 from services.document import DocumentService
-from core.database import AsyncSessionDep, ScopedSessionDep
-from core.storage import MinIOManagerDep
+from core import AsyncSessionDep, ScopedSessionDep, MinIOManagerDep
 import uuid
 
 router = APIRouter(tags=["Document"])

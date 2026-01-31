@@ -7,7 +7,7 @@ from schemas import (
     UserUpdate,
 )
 from services import UserService
-from core.database import AsyncSessionDep, ScopedSessionDep
+from core import AsyncSessionDep, ScopedSessionDep
 
 router = APIRouter(tags=["User"])
 

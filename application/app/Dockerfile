@@ -1,4 +1,3 @@
-
 # Взято из https://github.com/astral-sh/uv-docker-example/blob/main/Dockerfile
 # Use a Python image with uv pre-installed
 FROM astral/uv:python3.14-bookworm-slim
@@ -7,8 +6,8 @@ FROM astral/uv:python3.14-bookworm-slim
 RUN groupadd --system --gid 999 nonroot \
  && useradd --system --gid 999 --uid 999 --create-home nonroot
 
-# Install the project into `/app`
-WORKDIR /app
+# Install the project into `/application`
+WORKDIR /application
 
 # Enable bytecode compilation
 ENV UV_COMPILE_BYTECODE=1
@@ -23,19 +22,21 @@ ENV UV_NO_DEV=1
 ENV UV_TOOL_BIN_DIR=/usr/local/bin
 
 # Install the project's dependencies using the lockfile and settings
+# Bind mount to app/ subdirectory so .venv is created in /application/app/.venv
 RUN --mount=type=cache,target=/root/.cache/uv \
-    --mount=type=bind,source=uv.lock,target=uv.lock \
-    --mount=type=bind,source=pyproject.toml,target=pyproject.toml \
-    uv sync --locked --no-install-project
+    --mount=type=bind,source=app/uv.lock,target=app/uv.lock \
+    --mount=type=bind,source=app/pyproject.toml,target=app/pyproject.toml \
+    uv sync --locked --no-install-project --directory app
 
 # Then, add the rest of the project source code and install it
 # Installing separately from its dependencies allows optimal layer caching
-COPY . /app
+COPY ./app /application/app
+COPY ./shared /application/shared
 RUN --mount=type=cache,target=/root/.cache/uv \
-    uv sync --locked
+    uv sync --locked --directory app
 
 # Place executables in the environment at the front of the path
-ENV PATH="/app/.venv/bin:$PATH"
+ENV PATH="/application/app/.venv/bin:$PATH"
 
 # Reset the entrypoint, don't invoke `uv`
 ENTRYPOINT []
@@ -43,9 +44,8 @@ ENTRYPOINT []
 # Use the non-root user to run our application
 USER nonroot
 
+# Set working directory for the app
+WORKDIR /application/app
+
 # Run the FastAPI application by default
-# Uses `uv run` to sync dependencies on startup, respecting UV_NO_DEV
-# Uses `fastapi dev` to enable hot-reloading when the `watch` sync occurs
-# Uses `--host 0.0.0.0` to allow access from outside the container
-# Note in production, you should use `fastapi run` instead
 CMD ["uv", "run", "uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8080"]

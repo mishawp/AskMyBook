@@ -9,7 +9,7 @@ from schemas import (
     DocumentPublic,
 )
 from services import ChatService
-from core.database import AsyncSessionDep, ScopedSessionDep
+from core import AsyncSessionDep, ScopedSessionDep
 from dependencies import CurrentUser
 
 router = APIRouter(tags=["Chat"])
