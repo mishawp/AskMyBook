@@ -1,14 +1,10 @@
 """MinIO storage module re-exported from shared with FastAPI-specific dependencies."""
 
-import sys
-
-sys.path.insert(0, "/application")
-
 from typing import Annotated
 from fastapi import Depends
 
-from shared.storage import MinIOManager, create_minio_manager
-from shared.config import MinIOSettings, get_minio_settings
+from shared.core.storage import MinIOManager, create_minio_manager
+from shared.core.config import MinIOSettings, get_minio_settings
 
 
 # Глобальная переменная для хранения единственного экземпляра MinIOManager

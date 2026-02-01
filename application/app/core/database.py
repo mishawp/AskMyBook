@@ -1,17 +1,13 @@
 """Database module re-exported from shared with FastAPI-specific dependencies."""
 
-import sys
-
-sys.path.insert(0, "/application")
-
 from typing import Annotated
 from fastapi import Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.ext.declarative import declarative_base
 from sqlmodel import SQLModel
 
-from shared.database import create_db_manager, DatabaseManager
-from shared.config import get_db_settings
+from shared.core.database import create_db_manager, DatabaseManager
+from shared.core.config import get_db_settings
 
 
 # Глобальный экземпляр DatabaseManager

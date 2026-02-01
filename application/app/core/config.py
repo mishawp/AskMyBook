@@ -1,10 +1,6 @@
 """Configuration re-exported from shared package with FastAPI-specific additions."""
 
-import sys
-
-sys.path.insert(0, "/application")
-
-from shared.config import (
+from shared.core.config import (
     DBSettings,
     MinIOSettings,
     get_db_settings,

@@ -1,3 +1,7 @@
+import sys
+
+sys.path.insert(0, "/application")
+
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from routes import user_router, chat_router, document_router, auth_router
