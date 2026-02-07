@@ -1,6 +1,6 @@
-"""Core module for FastAPI application."""
+"""Core module for ingestion worker service."""
 
-from .config import (
+from shared.core.config import (
     DBSettings,
     MinIOSettings,
     RabbitMQSettings,
@@ -10,19 +10,16 @@ from .config import (
 )
 from .database import (
     DatabaseManager,
-    db_manager,
-    AsyncSessionDep,
-    ScopedSessionDep,
-    init_db,
+    get_db_manager,
+    get_session,
+    get_scoped_session,
 )
 from .storage import (
     MinIOManager,
-    MinIOManagerDep,
     get_minio_manager,
-    init_minio,
 )
 from .broker import (
-    _broker,
+    get_broker,
     init_broker,
     shutdown_broker,
 )
@@ -35,15 +32,12 @@ __all__ = [
     "get_minio_settings",
     "get_rabbitmq_settings",
     "DatabaseManager",
-    "db_manager",
-    "AsyncSessionDep",
-    "ScopedSessionDep",
-    "init_db",
+    "get_db_manager",
+    "get_session",
+    "get_scoped_session",
     "MinIOManager",
-    "MinIOManagerDep",
     "get_minio_manager",
-    "init_minio",
-    "_broker",
+    "get_broker",
     "init_broker",
     "shutdown_broker",
 ]

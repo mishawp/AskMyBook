@@ -28,6 +28,8 @@ services:
         condition: service_healthy
       minio:
         condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
 
   postgres:
     image: postgres:18-alpine3.23
@@ -67,9 +69,52 @@ services:
       retries: 5
       start_period: 10s
 
+  rabbitmq:
+    image: rabbitmq:4.1-management-alpine
+    environment:
+      RABBITMQ_DEFAULT_USER: "${RABBITMQ_USER:-guest}"
+      RABBITMQ_DEFAULT_PASS: "${RABBITMQ_PASSWORD:-guest}"
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    restart: always
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  ingestion:
+    build:
+      context: .
+      dockerfile: ./ingestion/Dockerfile
+    env_file:
+      - .env
+    environment:
+      - PYTHONPATH=/application
+    volumes:
+      - ./shared:/application/shared
+      - ./ingestion:/application/ingestion
+      # исключаем виртуальное окружение и кэш из хоста
+      - /application/ingestion/__pycache__
+      - /application/ingestion/.venv
+    working_dir: /application/ingestion
+    command: ["uv", "run", "taskiq", "worker", "tasks:broker"]
+    depends_on:
+      postgres:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+
 volumes:
   postgres_data:
   minio_data:
+  rabbitmq_data:
 
 networks:
   default:

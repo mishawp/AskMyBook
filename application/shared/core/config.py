@@ -42,3 +42,26 @@ def get_db_settings() -> DBSettings:
 def get_minio_settings() -> MinIOSettings:
     """Фабрика настроек MinIO с кешированием."""
     return MinIOSettings()
+
+
+class RabbitMQSettings(BaseSettings):
+    """Класс настроек подключения к RabbitMQ."""
+
+    RABBITMQ_HOST: str
+    RABBITMQ_PORT: int = 5672
+    RABBITMQ_USER: str
+    RABBITMQ_PASSWORD: str
+    RABBITMQ_VHOST: str = "/"
+
+    @property
+    def RABBITMQ_URL(self) -> str:
+        """Полный URL для подключения к RabbitMQ."""
+        return f"amqp://{self.RABBITMQ_USER}:{self.RABBITMQ_PASSWORD}@{self.RABBITMQ_HOST}:{self.RABBITMQ_PORT}{self.RABBITMQ_VHOST}"
+
+    model_config = SettingsConfigDict(extra="ignore")
+
+
+@lru_cache()
+def get_rabbitmq_settings() -> RabbitMQSettings:
+    """Фабрика настроек RabbitMQ с кешированием."""
+    return RabbitMQSettings()

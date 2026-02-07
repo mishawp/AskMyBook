@@ -9,6 +9,8 @@ from core import (
     db_manager,
     init_db,
     init_minio,
+    init_broker,
+    shutdown_broker,
 )
 
 
@@ -16,7 +18,9 @@ from core import (
 async def lifespan(app: FastAPI):
     await init_minio()
     await init_db()
+    await init_broker()
     yield
+    await shutdown_broker()
     await db_manager.dispose()
 
 

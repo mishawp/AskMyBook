@@ -11,7 +11,20 @@ from schemas import (
     DocumentUpdate,
     ProcessingStatus,
 )
-from core import MinIOManager
+from core import MinIOManager, _broker
+from shared.tasks import TaskNames
+
+
+# Task stub for sending messages to ingestion service
+# Actual implementation is in ingestion/tasks.py
+@_broker.task(task_name=str(TaskNames.PROCESS_DOCUMENT))
+async def _process_document_task(document_id: str, storage_key: str) -> dict:
+    """Client-side stub for sending document to ingestion service.
+
+    This function body never executes - it's only for task registration.
+    The actual task runs in the ingestion worker service.
+    """
+    pass
 
 
 class DocumentService:
@@ -78,6 +91,13 @@ class DocumentService:
             )
 
             await self.session.commit()
+
+            # Отправляем задачу на обработку документа в ingestion сервис
+            await _process_document_task.kiq(
+                document_id=str(db_document.id),
+                storage_key=storage_key,
+            )
+
             return db_document
 
         except Exception as e:
